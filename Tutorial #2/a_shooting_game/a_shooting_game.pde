@@ -6,19 +6,26 @@ PVector star[];
 float []star_moving_speed; 
 int []star_shot_flag; //the flag showing whether the star is shot by a bullet
 
-PVector bullet;
+PVector bullets[];
+int numbullets = 5;
 int start_shooting=0; //the flag that shows whether the ship shoots a bullet
 int explode=0; //the flag that shows whether the bullet hits a star and explodes
 int score=0; 
+int currentBullet = 0;
 
 void setup() // executes once
 {
   size(400,400); // set window size
   ship = new PVector(200,350); //the ship's position
   star = new PVector[numstars];
+  bullets = new PVector[numbullets];
   star_moving_speed = new float[numstars];
   star_shot_flag= new int[numstars];
 
+ // initialize bullets array
+ for (int i = 0; i < numbullets; i ++ ) { // Initialize each Car using a for loop.
+    bullets[i] = new PVector(0, -20); 
+  }
  
   for (int i = 0; i < numstars; i++)
   {
@@ -65,9 +72,12 @@ void draw() // draw loop, executes repeatedly
     
        if(explode==0) //if the bullet does not hit a star (i.e. it keeps moving), we draw the bullet; otherwise we skip drawing it.
        {  
-          bullet.y=bullet.y-5; 
-          fill(20,180,250); // set draw color
-          ellipse(bullet.x,bullet.y,10,10); // draw bullet
+         for (int i = 0; i < numbullets; i++)
+         {
+            bullets[i].y -= 5; 
+            fill(20,180,250); // set draw color
+            ellipse(bullets[i].x,bullets[i].y,10,10); // draw bullet
+         }
        }
     
      
@@ -75,18 +85,21 @@ void draw() // draw loop, executes repeatedly
       {  
          if(star_shot_flag[i]==0) 
          {
-             float distanceStarBullet; //the distance between star and bullet
-             distanceStarBullet= sqrt((bullet.x- star[i].x)*(bullet.x- star[i].x)+(bullet.y- star[i].y)*(bullet.y- star[i].y));
-             
+             for (int j = 0; j < numbullets; j++)
+             {
+               float distanceStarBullet; //the distance between star and bullet
+               distanceStarBullet= sqrt((bullets[j].x- star[i].x)*(bullets[j].x- star[i].x)+(bullets[j].y- star[i].y)*(bullets[j].y- star[i].y));
+               
+               if(distanceStarBullet<11) //star that is close to a bullet within a distance is shot
+               {  
+                  star_shot_flag[i]=1; //set flags
+                  explode=1; 
+                  score++; //update score
+               }
+             }
              float distanceStarPlayer; //the distance between star and bullet
              distanceStarPlayer= sqrt((ship.x- star[i].x)*(ship.x- star[i].x)+(ship.y- star[i].y)*(ship.y- star[i].y));
              
-             if(distanceStarBullet<11) //star that is close to a bullet within a distance is shot
-             {  
-                star_shot_flag[i]=1; //set flags
-                explode=1; 
-                score++; //update score
-             }
              if(distanceStarPlayer<16) //star that is close to player kills player and ends game
                exit();
              
@@ -132,8 +145,10 @@ void keyPressed()
      
   if(key=='f')//shoot a bullet when "f" pressed
   { explode=0;
-    bullet= new PVector(ship.x,ship.y);
-    start_shooting=1;  
+    bullets[currentBullet]= new PVector(ship.x,ship.y);
+    start_shooting=1;
+    currentBullet++;
+    currentBullet = currentBullet % 5;  
   }  
   
   if(key=='j' && shipVelocity > -10) //move left when "j" pressed

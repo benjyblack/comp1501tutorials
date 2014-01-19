@@ -75,15 +75,20 @@ void draw() // draw loop, executes repeatedly
       {  
          if(star_shot_flag[i]==0) 
          {
-             float distance; //the distance between star and bullet
-             distance= sqrt((bullet.x- star[i].x)*(bullet.x- star[i].x)+(bullet.y- star[i].y)*(bullet.y- star[i].y));
-       
-             if(distance<11) //star that is close to a bullet within a distance is shot
+             float distanceStarBullet; //the distance between star and bullet
+             distanceStarBullet= sqrt((bullet.x- star[i].x)*(bullet.x- star[i].x)+(bullet.y- star[i].y)*(bullet.y- star[i].y));
+             
+             float distanceStarPlayer; //the distance between star and bullet
+             distanceStarPlayer= sqrt((ship.x- star[i].x)*(ship.x- star[i].x)+(ship.y- star[i].y)*(ship.y- star[i].y));
+             
+             if(distanceStarBullet<11) //star that is close to a bullet within a distance is shot
              {  
                 star_shot_flag[i]=1; //set flags
                 explode=1; 
                 score++; //update score
              }
+             if(distanceStarPlayer<16) //star that is close to player kills player and ends game
+               exit();
              
             fill(250,230,80); // set draw color
             ellipse(star[i].x,star[i].y,12,12); 

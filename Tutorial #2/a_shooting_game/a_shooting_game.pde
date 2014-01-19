@@ -1,5 +1,6 @@
 // global variables:
 PVector ship; // "Processing Vector" type, 2D or 3D vector
+float shipVelocity = 0;
 int numstars = 40;  
 PVector star[];
 float []star_moving_speed; 
@@ -41,6 +42,13 @@ void draw() // draw loop, executes repeatedly
      ellipse(star[i].x,star[i].y,12,12);
    
      
+  // change ship position
+  ship.x += shipVelocity;
+  
+  if (shipVelocity > 0)
+    shipVelocity -= 0.5;
+  else if (shipVelocity < 0)
+    shipVelocity += 0.5; 
   fill(20,180,250); // set draw color
   ellipse(ship.x,ship.y,20,20); // draw ship
 
@@ -123,9 +131,9 @@ void keyPressed()
     start_shooting=1;  
   }  
   
-  if(key=='j') //move left when "j" pressed
-  ship.x=ship.x-3;
+  if(key=='j' && shipVelocity > -10) //move left when "j" pressed
+    shipVelocity=shipVelocity-3;
   
-  if(key=='k') //move right when "k" pressed
-  ship.x=ship.x+3;    
+  if(key=='k' && shipVelocity < 10) //move right when "k" pressed
+    shipVelocity=shipVelocity+3;    
 }

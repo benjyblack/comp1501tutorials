@@ -78,7 +78,7 @@ void draw() // draw loop, executes repeatedly
              float distance; //the distance between star and bullet
              distance= sqrt((bullet.x- star[i].x)*(bullet.x- star[i].x)+(bullet.y- star[i].y)*(bullet.y- star[i].y));
        
-             if(distance<5) //star that is close to a bullet within a distance is shot
+             if(distance<11) //star that is close to a bullet within a distance is shot
              {  
                 star_shot_flag[i]=1; //set flags
                 explode=1; 
